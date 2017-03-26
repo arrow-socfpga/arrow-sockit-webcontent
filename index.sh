@@ -5,12 +5,17 @@ elif [ "`cat /sys/devices/soc0/machine`" == "Altera SOCFPGA Arria V" ]; then
 	MACHINE="arria5"
 elif [ "`cat /sys/devices/soc0/machine`" == "Altera SOCFPGA Arria 10" ]; then
 	MACHINE="arria10"
+elif [ "`cat /sys/devices/soc0/machine`" == "Terasic SoCkit" ]; then
+	MACHINE="sockit"
 else
 	MACHINE="undef"
 fi
 
 case $MACHINE in
 cyclone5)
+	DEVKIT_NAME="Cyclone V Development Kit"
+	;;
+sockit)
 	DEVKIT_NAME="Arrow SoCKit Development Kit"
 	;;
 arria5)
@@ -77,7 +82,7 @@ echo "<hr style=\"border: 1px solid; color:#06c\"><br>"
 echo -e "<span><strong><h1>$DEVKIT_NAME Features</h1></strong><br/>"
 #echo -e "Mouse over the board photo to view features.</span>"
 
-if [ "$MACHINE" == "cyclone5" ]; then
+if [ "$MACHINE" == "sockit" ]; then
 	echo -e "<span class=\"dev-kit-flash\">"
 	echo -e "<script type=\"text/javascript\">"
 	echo -e "AC_FL_RunContent( 'codebase','http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0','width','800','height','518','src','sockit-board-flash','quality','high','pluginspage','http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash','movie','../sockit-board-flash');"
@@ -208,11 +213,11 @@ if [ "$LED_CONTROL" != "-1" ]; then
 	fi
 
 	if [ "$LED_COMMAND" = "on" ]; then
-		./toggle $LED_CONTROL 1
+		./toggle $LED_CONTROL 0
 	fi
 
 	if [ "$LED_COMMAND" = "off" ]; then
-		./toggle $LED_CONTROL 0
+		./toggle $LED_CONTROL 1
 	fi
 fi
 
@@ -266,8 +271,8 @@ else
 SCROLL_START=0
 fi
 
-FPGA_IN_USER_MODE=`cat /sys/class/fpga/fpga0/status`
-if [ "$FPGA_IN_USER_MODE" != "user mode" ]; then
+FPGA_IN_USER_MODE=`cat /sys/kernel/config/device-tree/overlays/arrow-sockit.dtbo/status`
+if [ "$FPGA_IN_USER_MODE" != "applied" ]; then
 echo -e "<p>FPGA is currently not programmed. LED control panel is disabled.</p>"
 echo -e "<p>In order to display and control the LED via web or using command shell, "
 echo -e "please program the FPGA before booting the system up. </p>"
