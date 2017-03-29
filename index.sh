@@ -271,7 +271,7 @@ else
 SCROLL_START=0
 fi
 
-FPGA_IN_USER_MODE=`cat /sys/kernel/config/device-tree/overlays/arrow-sockit.dtbo/status`
+FPGA_IN_USER_MODE=`cat /sys/kernel/config/device-tree/overlays/sockit-ghrd-1080p.dtbo/status`
 if [ "$FPGA_IN_USER_MODE" != "applied" ]; then
 echo -e "<p>FPGA is currently not programmed. LED control panel is disabled.</p>"
 echo -e "<p>In order to display and control the LED via web or using command shell, "
